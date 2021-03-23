@@ -1,0 +1,26 @@
+﻿{
+    "name":"__MSG_title__",
+    "description":"__MSG_desc__",
+    "version":"1.0",
+    "default_locale":"zh_CN",
+    "permissions":[
+        "contextMenus",
+        "tabs",
+        "http://*/",
+        "https://*/",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "background":{
+        "scripts":[
+            "dreamfly.js"
+        ]
+    },
+    "icons":{
+        "16":"logo/logo16x16.png",
+        "48":"logo/logo48x48.png",
+        "128":"logo/logo128x128.png",
+        "256":"logo/logo256x256.png"
+    },
+    "manifest_version":2
+}
