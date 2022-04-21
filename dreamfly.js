@@ -1,25 +1,44 @@
-var optId = chrome.contextMenus.create({
-		"title" : chrome.i18n.getMessage("title")+" - DreamFly",
+var optIdOne = chrome.contextMenus.create({
+		"title" : "单集下载",
 		"contexts" : ["page"],
-		"onclick" : search
-	});
+		"onclick" : downloadOne
+});
+var optIdMul = chrome.contextMenus.create({
+		"title" : "全集下载",
+		"contexts" : ["page"],
+		"onclick" : downloadMul
+});
 
 var listsize=0;
 var title="Default";
 var arr = [];
 
-function search(info, tab) {
+function downloadOne(info, tab) {
+	arr=[];
+	listsize = 1;
+	var pageid = info.pageUrl.match(/([a-f\d]{32}|[A-F\d]{32})/)[0],
+	num = info.pageUrl.match(/(?<=.*?num=).*/)[0];
+	title = tab.title.replace(/-.*/,"") + " 第" + num + "集";
+	if(num != undefined && typeof num != "undefined"){
+		num -= 1;
+	}else{
+		num = 0;
+	}
+	getlist(pageid,num);
+}
+
+function downloadMul(info, tab) {
 	arr=[];
 	var pageid = info.pageUrl.match(/([a-f\d]{32}|[A-F\d]{32})/)[0];
 	title = tab.title.replace(/-.*/,"");
-	getlist(pageid);
+	getlist(pageid,null);
 }
 
 // new Date().getTime())
-function getlist(pageid){
+function getlist(pageid,num){
 	var tm = new Date().getTime();
-	var sign = MD5('os:Android|version:3.9.82|action:/api/vod/listVodSactions.action|time:'+tm+'|appToken:ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3|privateKey:e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2|data:hasIntroduction=0&vodUuid='+pageid+'&');
-	var data = '{"time":'+tm+',"data":{"vodUuid":"'+pageid+'","hasIntroduction":0},"appToken":"ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3","os":"Android","version":"3.9.82","channel":"AppStore","sign":"'+sign+'"}';
+	var sign = MD5('os:Android|version:4.3.20|action:/api/vod/listVodSactions.action|time:'+tm+'|appToken:ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3|privateKey:e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2|data:hasIntroduction=0&vodUuid='+pageid+'&vod_type=0&');
+	var data = '{"time":'+tm+',"data":{"vodUuid":"'+pageid+'","hasIntroduction":0,"vod_type":0},"appToken":"ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3","os":"Android","version":"4.3.20","channel":"AppStore","sign":"'+sign+'"}';
     var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'https://mob.mddcloud.com.cn/api/vod/listVodSactions.action', true);
 	xhr.setRequestHeader("Accept-Language", "en-CN;q=1, zh-Hans-CN;q=0.9");
@@ -29,10 +48,16 @@ function getlist(pageid){
 			var d = JSON.parse(xhr.response);
 			if(d.msgType==0){
 				var data = d.data;
-				listsize = data.length;
-				for (var i = 0; i < data.length; i++) {
-					getVod(data[i].uuid);
+				if(num == null){
+					listsize = data.length;
+					for (var i = 0; i < data.length; i++) {
+						getVod(data[i].uuid);
+					}
+				}else{
+					listsize = 1;
+					getVod(data[num].uuid);
 				}
+
 			}else{
 				console.log("签名错误");
 			}
@@ -48,8 +73,8 @@ function getlist(pageid){
 
 function getVod(vodId){
 	var tm = new Date().getTime();
-	var sign = MD5('os:Android|version:3.9.82|action:/api/vod/getSaction.action|time:'+tm+'|appToken:ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3|privateKey:e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2|data:action=playUrl&checkVodTicket=1&sactionUuid='+vodId+'&');
-	var data = '{"time":'+tm+',"data":{"checkVodTicket":1,"action":"playUrl","sactionUuid":"'+vodId+'"},"appToken":"ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3","os":"Android","version":"3.9.82","channel":"AppStore","deviceNum":"6d5f00ea8ab642d4901ff3ebe14aba39","deviceType":1,"sign":"'+sign+'"}';
+	var sign = MD5('os:Android|version:4.3.20|action:/api/vod/getSaction.action|time:'+tm+'|appToken:ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3|privateKey:e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2|data:action=playUrl&checkVodTicket=1&sactionUuid='+vodId+'&');
+	var data = '{"time":'+tm+',"data":{"checkVodTicket":1,"action":"playUrl","sactionUuid":"'+vodId+'"},"appToken":"ee2467a3c3224108876617ca6a5a074d44719ed31e78994d1a7f37f0520da1c3","os":"Android","version":"4.3.20","channel":"AppStore","deviceNum":"6d5f00ea8ab642d4901ff3ebe14aba39","deviceType":1,"sign":"'+sign+'"}';
     var xhr = new XMLHttpRequest();
 	xhr.open('POST', 'https://mob.mddcloud.com.cn/api/vod/getSaction.action', true);
 	xhr.setRequestHeader("Accept-Language", "en-CN;q=1, zh-Hans-CN;q=0.9");
@@ -59,20 +84,26 @@ function getVod(vodId){
 			var d = JSON.parse(xhr.response);
 			if(d.msgType==0){
 				var data = d.data;
-				var url = data.multiFhdMp4;
+				var url = data.fluHls;
 				if(url==""||url==undefined||url=="undefined"){
-					url=data.multiFluMp4;
+					url=data.fluHls;
 					if(url==""||url==undefined||url=="undefined"){
-						url=data.multiHdMp4;
+						url=data.fourHls;
 						if(url==""||url==undefined||url=="undefined"){
-							url=data.multiSdMp4;
+							url=data.fhdHls;
 							if(url==""||url==undefined||url=="undefined"){
-								url=data.oriUrl;
+								url=data.hdHls;
 								if(url==""||url==undefined||url=="undefined"){
-									url=data.tryUrl;
+									url=data.sdHls;
+									if(url==""||url==undefined||url=="undefined"){
+										url=data.oriUrl;
+										if(url==""||url==undefined||url=="undefined"){
+											url=data.tryUrl;
+										}
+									}
 								}
 							}
-						}
+						}	
 					}
 				}
 				var index = data.num;
@@ -98,7 +129,9 @@ function callback(url,index){
 		if(listsize==0){
 			var content = "";
 			for (var j = 0; j < arr.length; j++) {
-				content += arr[j]+"\r\n";
+				if(arr[j] != undefined){
+					content += arr[j]+"\r\n";
+				}
 			}
 			content=content.replace(/^\r\n+|\r\n+$/g,"");
 			let i = new Blob([content], {
@@ -314,7 +347,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     });
     details.requestHeaders.push({
         name:"User-Agent",
-        value:"Mdd/3.9.82 (ios 14.2)"
+        value:"Mdd/4.3.20 (ios 15.4)"
     });
     return {
         requestHeaders: details.requestHeaders
