@@ -9,8 +9,7 @@
 <p>在chrome内核的浏览器安装crx,在埋堆堆页面右击选择单集或全集即可解析无水印的M3u8视频地址</p>
 </li>
 <li>
-<p>下载需要携带User-Agent，否则地址403。推荐使用<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI
-下载，可使用Simple GUI。</a></p>
+<p>下载需要携带User-Agent，否则地址403。推荐使用<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI</a>下载，可使用Simple GUI。</p>
 </li>
 </ol>
 <h2>声明</h2>
