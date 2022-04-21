@@ -3,9 +3,14 @@
 <h2>使用方法</h2>
 <ol>
 <li>
-<p>修改dreamfly.js中appToken，可通过网络抓包获取 appToken</p>
+<p>修改dreamfly.js中appToken和deviceNum，可通过网络抓包获取 appToken和deviceNum</p>
+</li>
 <li>
-<p>在chrome内核的浏览器安装crx,在埋堆堆页面右击即可解析全集的mp4地址</p>
+<p>在chrome内核的浏览器安装crx,在埋堆堆页面右击选择单集或全集即可解析无水印的M3u8视频地址</p>
+</li>
+<li>
+<p>下载需要携带User-Agent，否则地址403。推荐使用<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI
+下载，可使用Simple GUI。</a></p>
 </li>
 </ol>
 <h2>声明</h2>
