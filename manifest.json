@@ -1,4 +1,4 @@
-{
+﻿{
     "name":"__MSG_title__",
     "description":"__MSG_desc__",
     "version":"2.0",
@@ -6,15 +6,21 @@
     "permissions":[
         "contextMenus",
         "tabs",
-        "http://*/",
-        "https://*/",
+        "https://mob.mddcloud.com.cn/*",
         "webRequest",
         "webRequestBlocking"
     ],
+    "browser_action" : {
+        "default_popup": "pop.html"
+    },
     "background":{
         "scripts":[
-            "dreamfly.js"
-        ]
+            "js/jquery.min.js",
+            "js/dreamfly.js",
+            "js/getua.js",
+            "js/click.js"
+        ],
+        "css": ["css/bootstrap.min.css"]
     },
     "icons":{
         "16":"logo/logo16x16.png",
