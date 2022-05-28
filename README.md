@@ -1,5 +1,5 @@
 <h1>目前已更新下载的接口User-Agent算法，无需手动指定UA，下载需配合<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI</a></br></h1>
-<h1>mddparser</h1>
+<h1><a href="https://www.mddcloud.com.cn/">mddparser</a></h1>
 <p> 埋堆堆视频批量解析 chrome拓展程序</p>
 <h2>使用方法</h2>
 <ol>
@@ -13,7 +13,7 @@
 <p>下载需要携带User-Agent，否则地址403。推荐使用<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI</a>下载，可使用Simple GUI。</p>
 </li>
 </ol>
-<h2>下载操作</h2>
+<h2>操作步骤</h2>
 <img src="https://user-images.githubusercontent.com/21048630/170844813-ff949c77-ead4-4ca0-9e56-94c682b0a60a.png" />
 <h2>声明</h2>
 <p>解析后请将下载的文本改后缀为bat,并将文本编码改为ANSI(防中文乱码)，放到"<a href="https://github.com/nilaoda/N_m3u8DL-CLI" rel="nofollow">N_m3u8DL-CLI</a>"目录中，
