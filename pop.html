@@ -4,14 +4,43 @@
     <meta charset="utf-8">
     <title></title>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      input:focus,input:active {
+        box-shadow: none !important;
+      }
+      .f-10 {
+        font-size: 10px;
+      }
+      .f-w-900 {
+        font-weight:900;
+      }
+      .c-red {
+        color: red;
+      }
+      .ndl:hover{
+        cursor: pointer;
+      }
+    </style>
     <script src="js/jquery.min.js"></script>
    </head>
    <body>
-      <div class="card" style="width: 14rem;">
+      <div class="card" style="width: 15rem;">
         <div class="card-body">
           <b class="card-title">埋堆堆解析 - dreamfly</b>
-          <p class="font-weight-lighter mt-2" style="font-size: 10px">说明：本插件通过反编译安卓App后编写，解析后请将下载的文本改后缀为bat,并将文本编码改为ANSI(防中文乱码)，放到<b>"N_m3u8DL-CLI"</b>目录中，配合<b>"N_m3u8DL-CLI"</b>工具下载，插件仅供学习研究，请勿滥用！下载后请于24小时内删除，多谢合作！</p>
+          <p class="font-weight-lighter mt-2 text-break f-10">说明：本插件通过反编译安卓App后编写，解析后下载的<b class="f-w-900">bat</b>为可执行文件<span class="c-red f-w-900">（插件开源，无后门，请放心）</span>，允许即可，放到<b>"<a data-href="https://github.com/nilaoda/N_m3u8DL-CLI" class="ndl">N_m3u8DL-CLI</a>"</b>目录中，配合<b>"<a data-href="https://github.com/nilaoda/N_m3u8DL-CLI" class="ndl">N_m3u8DL-CLI</a>"</b>工具下载，插件仅供学习研究，请勿滥用！下载后请于24小时内删除，多谢合作！</p>
+          <hr/>
+          <div class="inp-box mt-n2 d-none">
+            <p class="font-weight-lighter text-break f-10 mb-2">使用<a data-href="https://github.com/nilaoda/N_m3u8DL-CLI/blob/master/README.md" class="ndl">m3u8dl://协议</a>前，需要先注册协议，详情请点击后查看文档。<span class="c-red f-w-900">由于浏览器安全限制，请在下方手动输入存储路径</span><br/>如：“C:\Users\dreamfly\Downloads”</p>
+            <div class="input-group input-group-sm mb-2">
+                <input type="text" id="path" class="form-control" placeholder="输入存储路径" aria-label="输入存储路径" aria-describedby="savePath">
+                <div class="input-group-append">
+                  <a class="btn btn-outline-primary" id="savePath">保存</a>
+                </div>
+            </div>
+          </div>
           <div class="group">
+            <a href="#" id="nDl" class="btn btn-outline-success btn-sm btn-block">m3u8dl://协议下载本集</a>
+            <a href="#" id="changePath" class="btn btn-outline-secondary btn-sm btn-block">添加存储路径</a>
             <a href="#" id="downOne" class="btn btn-outline-primary btn-sm btn-block">单集下载</a>
             <a href="#" id="downMul" class="btn btn-outline-info btn-sm btn-block">全集下载</a>
           </div>
