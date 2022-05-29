@@ -20,6 +20,18 @@
       .ndl:hover{
         cursor: pointer;
       }
+      .bd-callout-info {
+        border: 1px solid #eee;
+        border-left-width: 0.25rem;
+        border-radius: 0.15rem;
+        padding: .8rem;
+      }
+      .b-l-blue {
+        border-left-color: #5bc0de;
+      }
+      .b-l-yellow {
+        border-left-color: #f0ad4e;
+      }
     </style>
     <script src="js/jquery.min.js"></script>
    </head>
@@ -38,11 +50,13 @@
                 </div>
             </div>
           </div>
-          <div class="group">
-            <a href="#" id="nDl" class="btn btn-outline-success btn-sm btn-block">m3u8dl://协议下载本集</a>
-            <a href="#" id="changePath" class="btn btn-outline-secondary btn-sm btn-block">添加存储路径</a>
+          <div class="bd-callout-info mb-2 b-l-blue">
             <a href="#" id="downOne" class="btn btn-outline-primary btn-sm btn-block">单集下载</a>
             <a href="#" id="downMul" class="btn btn-outline-info btn-sm btn-block">全集下载</a>
+          </div>
+          <div class="bd-callout-info b-l-yellow">
+            <a href="#" id="nDl" class="btn btn-outline-success btn-sm btn-block">m3u8dl://协议下载本集</a>
+            <a href="#" id="changePath" class="btn btn-outline-secondary btn-sm btn-block">添加存储路径</a>
           </div>
         </div>
       </div>
