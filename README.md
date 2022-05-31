@@ -14,10 +14,7 @@
 </li>
 </ol>
 <h2>操作步骤</h2>
-<h3>方法一</h3>
-<img src="https://user-images.githubusercontent.com/21048630/171171954-7c99a97e-c8f7-482a-86b9-16bf5c3c7114.png" />
-<h3>方法二（有概率出错）</h3>
-<img src="https://user-images.githubusercontent.com/21048630/171172012-add46871-5ded-4c95-98b2-47cc59053786.png" />
+<img src="https://user-images.githubusercontent.com/21048630/170877440-ba5916c6-f065-4ced-aad4-0586804391dd.png" />
 <h2>声明</h2>
 <p>本插件通过反编译安卓App后编写，仅供学习研究，请勿滥用！<br/>
  下载后请于24小时内删除，多谢合作！</p>
