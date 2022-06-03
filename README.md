@@ -14,7 +14,7 @@
 </li>
 </ol>
 <h2>操作步骤</h2>
-<img src="https://user-images.githubusercontent.com/21048630/170875123-e63b36ee-f664-4b8c-b00a-c7bd5fd2ced0.png" />
+<img src="https://user-images.githubusercontent.com/21048630/170877440-ba5916c6-f065-4ced-aad4-0586804391dd.png" />
 <h2>声明</h2>
 <p>本插件通过反编译安卓App后编写，仅供学习研究，请勿滥用！<br/>
  下载后请于24小时内删除，多谢合作！</p>
