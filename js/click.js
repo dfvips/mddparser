@@ -1,7 +1,7 @@
 let url,info = {},tab,path = localStorage.getItem('savePath');
 chrome.tabs.query({active: true,currentWindow: true},function(tabs) {
-    url = tabs[0].url;
-    info.pageUrl = url;
+    info.pageUrl = tabs[0].url;
+    info.title = tabs[0].title.replace(/-.*/,'');
     tab = tabs[0];
 });
 
