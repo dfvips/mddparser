@@ -70,10 +70,10 @@ function checkUrl(url,mode){
 //开始判断
 async function startTask (pageid,num,mode){
 	isbreak = false;
-	if(appToken === '') {
+	if(appToken === '' || appToken === 'null' || appToken === null) {
 		appToken = getRandomid(64);
 	}
-	if(deviceNum === '') {
+	if(deviceNum === '' || appToken === 'null' || appToken === null) {
 		deviceNum = getRandomid(32);
 	}
 	let tm = new Date().getTime(),
