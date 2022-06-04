@@ -1,7 +1,7 @@
 ﻿{
     "name":"__MSG_title__",
     "description":"__MSG_desc__",
-    "version":"2.1.0",
+    "version":"2.1.1",
     "default_locale":"zh_CN",
     "permissions":[
         "contextMenus",
@@ -18,11 +18,11 @@
             "js/jquery.min.js",
             "js/jszip/jszip.min.js",
             "js/jszip/FileSaver.js",
+            "js/ajax.js",
             "js/dreamfly.js",
             "js/getua.js",
             "js/click.js",
-            "js/tab.js",
-            "js/ajax.js"
+            "js/tab.js"
         ],
         "css": ["css/bootstrap.min.css"]
     },

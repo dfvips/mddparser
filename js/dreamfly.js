@@ -3,7 +3,8 @@ let listsize=0,arr = [],dl,isbreak = false,title,
 privateKey = 'e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2',
 headers = {'Accept-Language': 'en-CN;q=1, zh-Hans-CN;q=0.9','Content-Type': 'application/json;charset=UTF-8'},
 appToken = '',//
-deviceNum = '';//;
+deviceNum = '',
+isdownTry = false;//;
 // 下载单个
 function downloadOne(info, tab,flag) {
 	if (typeof flag === 'undefined'){
@@ -90,16 +91,31 @@ async function startTask (pageid,num,mode){
 	}
 	//解析下载
 	async function down(epList){ 
-		let epFrees = epList.filter(ep => ep.isFreeLimit === 1),
-		epVips = epList.filter(ep => ep.isFreeLimit === 0),
+		isdownTry = false;
+		let epFrees = epList.filter(ep => ep.isFreeLimit === 1 || ep.isVipSaction === 0),
+		epVips = epList.filter(ep => ep.isFreeLimit === 0 && ep.isVipSaction === 1),
 		epVipFirst = epVips.filter((ep,index) => index === 0),
 		epVipNext = epVips.filter((ep,index) => index > 0),
 		frees = await sortList(epFrees);
 		vipFirst = await sortList(epVipFirst);
 		vips = vipFirst;
-		if (vips.length > 0 && Object.keys(vipFirst[0]).length !== 0){
+		if (vips.length > 0 && Object.keys(vipFirst[0]).length !== 0 && vipFirst[0].url.indexOf('exper=360')=== -1){
 			let vipNext = await sortList(epVipNext);
 			vips = vips.concat(vipNext);
+		}else {
+			if(!dl){
+				if(vips.length > 0 && vipFirst[0].url.indexOf('exper=360')!== -1) {
+					var r = confirm("是否需要下载试看？");
+					if (r == true){
+						let vipNext = await sortList(epVipNext);
+						vips = vips.concat(vipNext);
+						isdownTry = true;
+					}
+				}else {
+					let vipNext = await sortList(epVipNext);
+					vips = vips.concat(vipNext);
+				}
+			}
 		}
 		let result = frees.concat(vips);
 		startDown(result);
@@ -118,11 +134,14 @@ async function startTask (pageid,num,mode){
 						obj.url = master;
 						obj.ua = calc(master);
 						obj.name = data.name;
+						obj.duration = data.duration;
 					}
 				}else {
 					obj.url = data.oriUrl;
 					obj.ua = calc(obj.url);
 					obj.name = data.name;
+					obj.duration = data.duration;
+					obj.size = data.size;
 				}
 			}else {
 				console.log(null);
@@ -165,7 +184,7 @@ async function startTask (pageid,num,mode){
 function startDown(arr){
 	if(dl){
 		let o = arr[0];
-		if(o.url != undefined && o.ua != undefined) {
+		if(o.url != undefined && o.ua != undefined && o.url.indexOf('m3u8') != -1) {
 			content = btoa(unescape(encodeURIComponent(getConent(o))));
 			window.open(`m3u8dl://${content}`);
 		}else {
@@ -173,20 +192,45 @@ function startDown(arr){
 		}
 	}else {
 		let batContent = 'chcp 65001',
-		textContent = '',
 		zip = new JSZip(),
 		batName = '',
-		zipName = '',
-		contentName = '';
+		zipName = '';
 
 		for (let o of arr) {
 			if(o.url != undefined) {
 				if(o.url.indexOf('m3u8') != -1) {
 					batContent += '\r\n' + `N_m3u8DL-CLI ${getConent(o)}`;
 				} else {
-					textContent += `${o.name} （试看）` + '\r\n';
-					textContent += `User-Agent：${o.ua}` + '\r\n';
-					textContent += o.url + '\r\n';
+					let arr = [],
+					m3 = `#EXTM3U\r\n#EXT-X-TARGETDURATION:15\r\n#EXT-X-DISCONTINUITY\r\n`;
+					//非试看文件
+					if(o.url.indexOf('exper=360')===-1){
+						arr = spiltVideo(o.size,arr);
+						for (let i = 0;i < arr.length;i++) {
+							m3 += `#EXTINF:10,\r\n`;
+							if (i === 0) {
+								m3 += `#EXT-X-BYTERANGE:${arr[i]}@0\r\n`;
+							}else if (i < arr.length-1) {
+								m3 += `#EXT-X-BYTERANGE:10485760@${arr[i-1]}\r\n`;
+							}else {
+								m3 += `#EXT-X-BYTERANGE:${o.size - arr[i-1]}@${arr[i-1]}\r\n`;
+							}
+							m3 += `${o.url}\r\n`;
+						}
+						m3 += `#EXT-X-ENDLIST`;
+						zip.file(`${o.name}.m3u8`, m3);
+						o.url = `${o.name}.m3u8`;
+						batContent += '\r\n' + `N_m3u8DL-CLI ${getConent(o)}`;
+					}else {
+						if(isdownTry) {
+							m3 += `#EXTINF:${o.duration}\r\n`;
+							m3 += `${o.url}\r\n`;
+							m3 += `#EXT-X-ENDLIST`;
+							zip.file(`${o.name}（试看）.m3u8`, m3);
+							o.url = `${o.name}（试看）.m3u8`;
+							batContent += '\r\n' + `N_m3u8DL-CLI ${getConent(o)}`;
+						}
+					}
 				}
 			}
 		}
@@ -201,10 +245,7 @@ function startDown(arr){
 			if(batContent !== 'chcp 65001') {
 				batName = `${title}.bat`;
 				zip.file(batName, batContent);
-			} else {
-				contentName = `${title}.txt`;
-				zip.file(contentName, textContent);
-			}	
+			}
 			zipName = `${title}.zip`;
 			zip.generateAsync({type:'blob'}).then(function(content) {
 				// see FileSaver.js
@@ -265,6 +306,14 @@ function getRandomid(n){
 		ids += chars[id];
 	}
 	return ids;
+}
+//切片
+function spiltVideo(n,arr){
+    for (let i = 1;(i*10485760) < n;i++) {
+        arr.push(i*10485760);
+    }
+    arr.push(n);
+	return arr;
 }
 chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     details.requestHeaders.push({
