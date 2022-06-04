@@ -235,12 +235,13 @@ function startDown(arr){
 // }
 //生成命令
 function getConent(o){
-	if(path != null) {
-		path = `--workDir "${path}"`;
+	let downPath = localStorage.getItem('savePath');
+	if(downPath != null) {
+		downPath = `--workDir "${path}"`;
 	}else {
-		path = '';
+		downPath = '';
 	}
-	let content = `"${o.url}" --saveName "${o.name}" ${path} --headers "User-Agent:${o.ua}" --enableDelAfterDone --enableBinaryMerge `;
+	let content = `"${o.url}" --saveName "${o.name}" ${downPath} --headers "User-Agent:${o.ua}" --enableDelAfterDone --enableBinaryMerge `;
 	return content;
 }
 //替换域名
