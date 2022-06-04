@@ -11,6 +11,7 @@
 </li>
 <li>
 <p>提示：若无appToken或deviceNum,仅能下载试看且带水印</p>
+<p>注意：非VIP账号，仅可解析非VIP</p>
 </li>
 <li>
 <p>PS：由于埋堆堆App鉴权客户端证书，因此普通抓包流程无法正常抓取到appToken和deviceNum，请根据<a href="https://github.com/r0ysue/r0capture">r0capture</a>教程frida环境。</p>
