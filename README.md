@@ -26,5 +26,5 @@
 <img src="https://user-images.githubusercontent.com/21048630/171918209-0acd121a-0e0d-40a9-a95c-a63a4574d995.png" />
 
 <h2>声明</h2>
-<p>本插件通过反编译安卓App后编写，仅供学习研究，请勿滥用！<br/>
+<p>本插件仅供学习研究，请勿滥用！<br/>
  下载后请于24小时内删除，多谢合作！</p>
