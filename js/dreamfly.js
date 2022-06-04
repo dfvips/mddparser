@@ -121,6 +121,7 @@ async function startTask (pageid,num,mode){
 					}
 				}else {
 					obj.url = data.oriUrl;
+					obj.ua = calc(obj.url);
 					obj.name = data.name;
 				}
 			}else {
@@ -180,10 +181,11 @@ function startDown(arr){
 
 		for (let o of arr) {
 			if(o.url != undefined) {
-				if(o.ua != undefined) {
+				if(o.url.indexOf('m3u8') != -1) {
 					batContent += '\r\n' + `N_m3u8DL-CLI ${getConent(o)}`;
 				} else {
 					textContent += `${o.name} （试看）` + '\r\n';
+					textContent += `User-Agent：${o.ua}` + '\r\n';
 					textContent += o.url + '\r\n';
 				}
 			}
