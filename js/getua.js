@@ -20,13 +20,13 @@ let b = function(bArr) {
 };
 
 let u = function(str,str2) {
-    let testLog = 'mdd_Android_4.3.20_30_';
+    let testLog = `mdd_Android_${version}_30_`;
     let replace = str2.replace(':80/', '/');
     let a10 = a(testLog + replace);
     if(a10 && a10.length > 10) {
         a10 = a10.substring(0, 10);
     }
-    return str + '4.3.20' + ' (Android+' + '30' + '+' + a10 + ')';
+    return str + `${version}` + ' (Android+' + '30' + '+' + a10 + ')';
 };
 
 let calc = function(url) {

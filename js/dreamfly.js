@@ -4,7 +4,8 @@ privateKey = 'e1be6b4cf4021b3d181170d1879a530a9e4130b69032144d5568abfd6cd6c1c2',
 headers = {'Accept-Language': 'en-CN;q=1, zh-Hans-CN;q=0.9','Content-Type': 'application/json;charset=UTF-8'},
 appToken = '',//
 deviceNum = '',
-isdownTry = false;//;
+version = ''
+isdownTry = false,isNeedAlterVersion = false;//;
 // 下载单个
 function downloadOne(info, tab,flag) {
 	if (typeof flag === 'undefined'){
@@ -21,12 +22,46 @@ function downloadMul(info, tab) {
 	title = info.title;
 	checkUrl(info.pageUrl,1);
 }
+// 修改appToken
+function changeAppToken(){
+	change('appToken');
+}
+// 修改deviceNum
+function changeDeviceNum(){
+	change('deviceNum');
+}
+//修改appVersion
+function changeAppVersion(){
+	change('appVersion');
+}
+//change
+function change(name){
+	let msg = window.prompt(`请输入${name}：`);
+	while (msg === '') {
+		msg = window.prompt(`请输入${name}：`);
+	}
+	if(msg !== null) {
+		localStorage.setItem(`${name}`,msg);
+	}
+	if(name === 'appVersion') {
+		version = msg;
+	}
+} 
 // 检测网站
 function checkUrl(url,mode){
 	if(url.indexOf('mddcloud.com.cn/video/') !== -1){
 		appToken = localStorage.getItem('appToken',),
-		deviceNum = localStorage.getItem('deviceNum');
-		if(appToken === null || deviceNum === null) {
+		deviceNum = localStorage.getItem('deviceNum'),
+		appVersion = localStorage.getItem('appVersion');
+		function checkVersion (){
+			if (appVersion === 'null' || appVersion === null) {
+				appVersion = '4.4.06';
+			}
+			localStorage.setItem('appVersion',appVersion);
+			version = appVersion;
+			return true;
+		}
+		if((appToken === null || deviceNum === null || appVersion === null) || (appToken === 'null' || deviceNum === 'null' || appVersion === 'null')) {
 			function checkUserMsg(msg,name) {
 				if(msg === null || msg === '') {
 					msg =	window.prompt(`请输入${name}：`);
@@ -47,15 +82,19 @@ function checkUrl(url,mode){
 					}
 				}
 			}
-			let checkOne =  checkUserMsg(appToken,'appToken');
-			if(checkOne) {
-				checkUserMsg(deviceNum,'deviceNum');
-				begin();
-			}else {
-				begin();
-			}	
+			if(checkVersion()){
+				let checkOne =  checkUserMsg(appToken,'appToken');
+				if(checkOne) {
+					checkUserMsg(deviceNum,'deviceNum');
+					begin();
+				}else {
+					begin();
+				}	
+			}
 		} else {
-			begin();
+			if(checkVersion()) {
+				begin();
+			}
 		}
 		
 		function begin () {
@@ -78,8 +117,8 @@ async function startTask (pageid,num,mode){
 		deviceNum = getRandomid(32);
 	}
 	let tm = new Date().getTime(),
-	sign = MD5(`os:Android|version:4.3.20|action:/api/vod/listVodSactions.action|time:${tm}|appToken:${appToken}|privateKey:${privateKey}|data:hasIntroduction=0&vodUuid=${pageid}&vod_type=0&`),
-	reqBody = `{"time":${tm},"data":{"vodUuid":"${pageid}","hasIntroduction":0,"vod_type":0},"appToken":"${appToken}","os":"Android","version":"4.3.20","channel":"AppStore","sign":"${sign}"}`,
+	sign = MD5(`os:Android|version:${version}|action:/api/vod/listVodSactions.action|time:${tm}|appToken:${appToken}|privateKey:${privateKey}|data:hasIntroduction=0&vodUuid=${pageid}&vod_type=0&`),
+	reqBody = `{"time":${tm},"data":{"vodUuid":"${pageid}","hasIntroduction":0,"vod_type":0},"appToken":"${appToken}","os":"Android","version":"${version}","channel":"AppStore","sign":"${sign}"}`,
 	listArr = await sendAxio('https://mob.mddcloud.com.cn/api/vod/listVodSactions.action',headers,'POST',JSON.parse(reqBody)),
 	epList = JSON.parse(listArr).data,
 	epCurrent = epList.filter(ep => ep.num == num);
@@ -127,26 +166,31 @@ async function startTask (pageid,num,mode){
 			res = await parse(uuid),
 			data = JSON.parse(res).data,
 			obj = {};
-			if(typeof data.masterPlaylistUrl != 'undefined' ||typeof data.oriUrl != 'undefined') {
-				if(typeof data.masterPlaylistUrl != 'undefined' ){
-					let master = replaceHost(data.masterPlaylistUrl);
-					if(typeof master !== 'undefined' && master !== '') {
-						obj.url = master;
-						obj.ua = calc(master);
+			if(data != null) {
+				if(typeof data.masterPlaylistUrl != 'undefined' ||typeof data.oriUrl != 'undefined') {
+					if(typeof data.masterPlaylistUrl != 'undefined' ){
+						let master = replaceHost(data.masterPlaylistUrl);
+						if(typeof master !== 'undefined' && master !== '') {
+							obj.url = master;
+							obj.ua = calc(master);
+							obj.name = data.name;
+							obj.duration = data.duration;
+						}
+					}else {
+						obj.url = data.oriUrl;
+						obj.ua = calc(obj.url);
 						obj.name = data.name;
 						obj.duration = data.duration;
+						obj.size = data.size;
 					}
 				}else {
-					obj.url = data.oriUrl;
-					obj.ua = calc(obj.url);
-					obj.name = data.name;
-					obj.duration = data.duration;
-					obj.size = data.size;
+					console.log(null);
 				}
-			}else {
-				console.log(null);
-			}
-			if (Object.keys(obj).length === 0) {
+				if (Object.keys(obj).length === 0) {
+					isbreak = true;
+				}
+			}else{
+				isNeedAlterVersion = true;
 				isbreak = true;
 			}
 			return obj;
@@ -157,8 +201,8 @@ async function startTask (pageid,num,mode){
 	async function parse(vodId) { 
 		if (!isbreak) {
 			let tm = new Date().getTime(),
-			sign = MD5(`os:Android|version:4.3.20|action:/api/vod/getSaction.action|time:${tm}|appToken:${appToken}|privateKey:${privateKey}|data:action=playUrl&checkVodTicket=1&sactionUuid=${vodId}&`),
-			reqBody = `{"time":${tm},"data":{"checkVodTicket":1,"action":"playUrl","sactionUuid":"${vodId}"},"appToken":"${appToken}","os":"Android","version":"4.3.20","channel":"AppStore","deviceNum":"${deviceNum}","deviceType":0,"sign":"${sign}"}`,
+			sign = MD5(`os:Android|version:${version}|action:/api/vod/getSaction.action|time:${tm}|appToken:${appToken}|privateKey:${privateKey}|data:action=playUrl&checkVodTicket=1&sactionUuid=${vodId}&`),
+			reqBody = `{"time":${tm},"data":{"checkVodTicket":1,"action":"playUrl","sactionUuid":"${vodId}"},"appToken":"${appToken}","os":"Android","version":"${version}","channel":"AppStore","deviceNum":"${deviceNum}","deviceType":0,"sign":"${sign}"}`,
 			res = await sendAxio('https://mob.mddcloud.com.cn/api/vod/getSaction.action',headers,'POST',JSON.parse(reqBody));
 			return res;
 		} else {
@@ -235,7 +279,7 @@ function startDown(arr){
 			}
 		}
 		
-		if (batContent !== 'chcp 65001' || textContent != '') {
+		if (batContent !== 'chcp 65001') {
 			if(arr.length === 1) {
 				title = arr[0].name;
 			}
@@ -252,7 +296,11 @@ function startDown(arr){
 				saveAs(content, zipName);
 			});
 		} else {
-			alert('请填写appToken和deviceNum，如果已经填写，请升级VIP');
+			if (isNeedAlterVersion) {
+				alert('请尝试修改AppVersion(手机App--我的--设置--关于(如：4.4.06))')
+			}else {
+				alert('请填写appToken和deviceNum，如果已经填写，请升级VIP');
+			}
 		}
 	}
 }
@@ -326,7 +374,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function (details) {
     });
     details.requestHeaders.push({
         name:"User-Agent",
-        value:"Mdd/4.3.20 (ios 15.4)"
+        value:`Mdd/${version} (ios 15.4)`
     });
     return {
         requestHeaders: details.requestHeaders
