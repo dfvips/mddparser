@@ -1,7 +1,7 @@
 ﻿{
     "name":"__MSG_title__",
     "description":"__MSG_desc__",
-    "version":"2.1.2",
+    "version":"2.2.0",
     "default_locale":"zh_CN",
     "permissions":[
         "contextMenus",
@@ -19,6 +19,7 @@
             "js/jszip/jszip.min.js",
             "js/jszip/FileSaver.js",
             "js/ajax.js",
+            "js/jsrsasign-all-min.js",
             "js/dreamfly.js",
             "js/getua.js",
             "js/click.js",
